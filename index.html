@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Company Analyzer Pro</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/plotly.js/2.26.0/plotly.min.js"></script>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<div id="sidebar">
+  <div class="sidebar-logo">
+    <h1>🤖 Company Analyzer</h1>
+    <p>AI-powered dashboard pro</p>
+  </div>
+
+  <!-- File Upload -->
+  <div class="sidebar-section">
+    <div class="sidebar-section-title">📂 Data Source</div>
+    <div class="upload-zone" id="upload-zone" onclick="document.getElementById('file-input').click()">
+      <div class="icon">📊</div>
+      <p><strong>Click or drop</strong> your CSV file<br>
+      Columns: name, industry, size<br>
+      Optional: revenue_eur, employees</p>
+    </div>
+    <input type="file" id="file-input" accept=".csv">
+    <div class="file-status" id="file-status"></div>
+
+    <div class="reload-row" style="margin-top:12px">
+      <label class="toggle-switch">
+        <input type="checkbox" id="rt-toggle" onchange="toggleRealtime()">
+        <span class="toggle-slider"></span>
+      </label>
+      <span class="toggle-label">Auto-reload CSV</span>
+    </div>
+  </div>
+
+  <!-- Company Filter -->
+  <div class="sidebar-section">
+    <div class="sidebar-section-title">🏢 Company Filter</div>
+    <select class="filter-select" id="company-filter" onchange="applyFilter()">
+      <option value="all">All Companies</option>
+    </select>
+  </div>
+
+  <!-- Chart Selection -->
+  <div class="sidebar-section">
+    <div class="sidebar-section-title">📈 Chart Selection</div>
+    <div class="chart-grid">
+      <div class="chart-toggle active" data-chart="bar-revenue" onclick="toggleChart(this)"><span class="ct-icon">📊</span> Revenue Bar</div>
+      <div class="chart-toggle active" data-chart="pie-industry" onclick="toggleChart(this)"><span class="ct-icon">🥧</span> Industry Pie</div>
+      <div class="chart-toggle active" data-chart="scatter" onclick="toggleChart(this)"><span class="ct-icon">⚡</span> Scatter Plot</div>
+      <div class="chart-toggle active" data-chart="bar-employees" onclick="toggleChart(this)"><span class="ct-icon">👥</span> Employees</div>
+      <div class="chart-toggle active" data-chart="line-revenue" onclick="toggleChart(this)"><span class="ct-icon">📈</span> Line Chart</div>
+      <div class="chart-toggle active" data-chart="horizontal" onclick="toggleChart(this)"><span class="ct-icon">↔️</span> Horizontal</div>
+      <div class="chart-toggle active" data-chart="radar" onclick="toggleChart(this)"><span class="ct-icon">🕸️</span> Radar Chart</div>
+      <div class="chart-toggle active" data-chart="ai-table" onclick="toggleChart(this)"><span class="ct-icon">🤖</span> AI Summary</div>
+    </div>
+    <div style="margin-top:10px;display:flex;gap:8px">
+      <button onclick="selectAllCharts(true)" style="flex:1;padding:6px;border-radius:6px;border:1px solid var(--border);background:transparent;color:var(--text2);font-size:10px;cursor:pointer">Select All</button>
+      <button onclick="selectAllCharts(false)" style="flex:1;padding:6px;border-radius:6px;border:1px solid var(--border);background:transparent;color:var(--text2);font-size:10px;cursor:pointer">Clear All</button>
+    </div>
+  </div>
+
+  <!-- Background -->
+  <div class="sidebar-section">
+    <div class="sidebar-section-title">🎨 Background Color</div>
+    <div class="color-swatches" id="color-swatches">
+      <div class="swatch active" style="background:#0f1117" data-color="#0f1117" onclick="setBgColor(this)" title="Dark"></div>
+      <div class="swatch" style="background:#0a0f1e" data-color="#0a0f1e" onclick="setBgColor(this)" title="Navy"></div>
+      <div class="swatch" style="background:#0d1f0d" data-color="#0d1f0d" onclick="setBgColor(this)" title="Forest"></div>
+      <div class="swatch" style="background:#1a0a0a" data-color="#1a0a0a" onclick="setBgColor(this)" title="Deep Red"></div>
+      <div class="swatch" style="background:#1a1a0a" data-color="#1a1a0a" onclick="setBgColor(this)" title="Olive"></div>
+      <div class="swatch" style="background:#f0f4f8" data-color="#f0f4f8" onclick="setBgColor(this)" title="Light"></div>
+      <div class="swatch" style="background:#1e1e2e" data-color="#1e1e2e" onclick="setBgColor(this)" title="Catppuccin"></div>
+      <div class="swatch" style="background:#2d1b69" data-color="#2d1b69" onclick="setBgColor(this)" title="Purple"></div>
+    </div>
+
+    <div style="margin-top:12px">
+      <div class="sidebar-section-title" style="margin-bottom:8px">🖼️ Background Image</div>
+      <input type="file" id="bg-file" accept="image/*" style="display:none" onchange="setBgImage(this)">
+      <button class="bg-upload-btn" onclick="document.getElementById('bg-file').click()">📁 Upload background image</button>
+      <button class="bg-upload-btn" onclick="clearBgImage()" style="margin-top:6px">✕ Remove background image</button>
+    </div>
+  </div>
+
+  <!-- AI Summaries -->
+  <div class="sidebar-section">
+    <div class="sidebar-section-title">🤖 AI Summaries (Groq)</div>
+    <input class="api-input" type="password" id="api-key" placeholder="gsk_your_groq_key_here">
+    <button class="gen-btn" id="gen-btn" onclick="generateAI()">✨ Generate AI Summaries</button>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div id="main">
+  <div class="empty-state" id="empty-state">
+    <div class="big-icon">📊</div>
+    <h2>Drop your CSV to get started</h2>
+    <p>Upload a CSV file with columns: <strong>name, industry, size</strong><br>
+    Optional: <strong>revenue_eur, employees</strong></p>
+  </div>
+
+  <div id="dashboard-content" style="display:none">
+    <div id="stats-bar">
+      <!-- Stats cards here - copy from your original if needed -->
+    </div>
+    <div id="chart-grid">
+      <!-- All chart cards here - copy from your original -->
+    </div>
+  </div>
+</div>
+
+<script src="js/script.js"></script>
+</body>
+</html>
