@@ -14,8 +14,12 @@ Modern AI-powered company analysis dashboard.
 1. Clone or download the project
 2. Open `index.html` in your browser
 3. Upload your CSV file
+   
+## 📊 CSV Format (Flexible)
 
+The app supports **dynamic column detection**. Recommended columns:
 ## CSV Format
+
 ```csv
 name,industry,size,revenue_eur,employees
 Enpal,Solar Energy,Large,5000000,1250
