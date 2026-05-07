@@ -1,0 +1,54 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap');
+
+:root {
+  --bg: #0f1117;
+  --surface: #1a1d27;
+  --surface2: #22263a;
+  --border: #2e3352;
+  --accent: #4f8ef7;
+  --accent2: #7c5cbf;
+  --success: #34d399;
+  --warning: #fbbf24;
+  --danger: #f87171;
+  --text: #e8eaf6;
+  --text2: #8b92b8;
+  --text3: #4a5080;
+  --radius: 12px;
+  --shadow: 0 4px 24px rgba(0,0,0,0.4);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  transition: background 0.4s;
+}
+
+/* Sidebar, Cards, Charts, etc. */
+#sidebar { position: fixed; left:0; top:0; bottom:0; width:280px; background:rgba(26,29,39,0.97); backdrop-filter:blur(20px); border-right:1px solid var(--border); overflow-y:auto; z-index:100; display:flex; flex-direction:column; }
+
+.chart-card {
+  background: rgba(26,29,39,0.92);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  backdrop-filter: blur(10px);
+  box-shadow: var(--shadow);
+  transition: all 0.4s ease;
+}
+
+body[has-bg-image="true"] .chart-card {
+  background: rgba(26,29,39,0.68);
+  backdrop-filter: blur(16px);
+}
+
+/* Paste all your remaining CSS styles here (upload-zone, stat-card, chart-toggle, etc.) */
+.upload-zone, .filter-select, .chart-toggle, .stat-card, .empty-state, #ai-table, .rt-badge, .spinner { /* ... your original styles ... */ }
+
+/* Add the rest of your CSS from the original file */
